@@ -1,5 +1,7 @@
 extends Node3D
 
+signal finished
+
 @export_group("Visual Effect")
 @export var aberration_material: ShaderMaterial
 @export var max_aberration : float = 0.03
@@ -30,7 +32,9 @@ var _current_lean: float = 0.0
 
 var _curve: Curve3D = null
 var _road_length: float = 0.0
-var _finished: bool = false
+
+var _started  : bool = false
+var _finished : bool = false
 
 var _current_aberration : float = 0.0
 
@@ -58,12 +62,15 @@ func apply_aberration(delta: float) -> void:
 	
 
 func _physics_process(delta: float) -> void:
+
+	
+
 	if _curve == null:
 		return
 		
 	if not _finished and path_distance >= _road_length:
 		_finished = true
-		print("FINISH")
+		finished.emit()
 	
 	if _finished:
 		speed = move_toward(speed, 0.0, coast_decelleration * delta) #If done, coast down
@@ -77,10 +84,10 @@ func _physics_process(delta: float) -> void:
 	#Add boost process
 	
 	var total_speed : float = get_total_speed()
-	path_distance += total_speed * delta
+	path_distance += total_speed * delta *int( _started)
 	
 	var steering := Input.get_axis("move_left", "move_right")
-	lateral_position += steering * lateral_movement_speed *delta
+	lateral_position += steering * lateral_movement_speed *delta *int( _started)
 	lateral_position = clampf(lateral_position, -lateral_position_limit, lateral_position_limit)
 	
 	var xf := _curve.sample_baked_with_rotation(path_distance, true, true)

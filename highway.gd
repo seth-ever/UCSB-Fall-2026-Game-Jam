@@ -33,11 +33,16 @@ var road_path: Path3D = null
 var _rng := RandomNumberGenerator.new()
 var total_length: float = 0.0
 
-
+@onready var race_ui = $RaceUI
 @onready var player: Node3D = $Player
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
+	race_ui.race_started.connect(func(): player._started = true)
+	player.finished.connect(race_ui.finish_race)
+	race_ui.race_finished.connect(on_race_finished)
+
+	
 	
 	total_length = road_length + runoff_length
 	
@@ -251,3 +256,6 @@ func _build_road_lines() -> void:
 	meshInstance.material_override= lines_material
 	meshInstance.extra_cull_margin = 16384.0
 	add_child(meshInstance)
+
+func on_race_finished(final_time : float) -> void:
+	print("Finished in ", final_time)

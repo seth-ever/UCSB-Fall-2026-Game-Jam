@@ -7,6 +7,7 @@
 [ext_resource type="Material" uid="uid://ud5o6dn7rcjw" path="res://Art/Materials/road_lines.tres" id="4_53wp0"]
 [ext_resource type="Sky" uid="uid://v37n6w8ncwg8" path="res://Art/HDRIs/EveningSkyHDRI011A_4K/EveningSkyHDRI011A_4K.tres" id="5_d0n2m"]
 [ext_resource type="Material" uid="uid://d32hchusnjtg5" path="res://Art/Shaders/vaporwave_shader.tres" id="6_rr734"]
+[ext_resource type="Script" uid="uid://dk85mt2rwxkg6" path="res://race_ui.gd" id="8_bgqgp"]
 
 [sub_resource type="Environment" id="Environment_b8hyw"]
 background_mode = 2
@@ -22,6 +23,12 @@ volumetric_fog_albedo = Color(0.85882354, 0.4745098, 0.2901961, 1)
 [sub_resource type="QuadMesh" id="QuadMesh_lkdlq"]
 material = ExtResource("6_rr734")
 size = Vector2(2, 2)
+
+[sub_resource type="LabelSettings" id="LabelSettings_bgqgp"]
+font_size = 200
+
+[sub_resource type="LabelSettings" id="LabelSettings_v7vmg"]
+font_size = 50
 
 [node name="Highway" type="Node3D" unique_id=159052111]
 script = ExtResource("1_htopo")
@@ -42,3 +49,26 @@ visible = false
 cast_shadow = 0
 extra_cull_margin = 16384.0
 mesh = SubResource("QuadMesh_lkdlq")
+
+[node name="RaceUI" type="CanvasLayer" parent="." unique_id=666856725]
+script = ExtResource("8_bgqgp")
+
+[node name="StartCountDownLabel" type="Label" parent="RaceUI" unique_id=1107869657]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+label_settings = SubResource("LabelSettings_bgqgp")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="RaceTimerLabel" type="Label" parent="RaceUI" unique_id=546444924]
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -40.0
+offset_bottom = 23.0
+grow_horizontal = 0
+label_settings = SubResource("LabelSettings_v7vmg")
+horizontal_alignment = 2
