@@ -4,6 +4,10 @@ extends CanvasLayer
 signal race_started
 signal race_finished(final_time : float)
 
+@export var race_music : AudioStream
+@export var beep_sfx : AudioStream
+@export var go_sfx : AudioStream
+
 @onready var countdown_label : Label = $StartCountDownLabel
 @onready var timer_label : Label = $RaceTimerLabel
 
@@ -27,8 +31,10 @@ func _process(delta: float) -> void:
 func start_countdown() -> void:
 	for n in [3, 2, 1]:
 		countdown_label.text = str(n)
+		#Add play for countdown sfx
 		await get_tree().create_timer(1.0).timeout
 	countdown_label.text = "ACCELERATE!"
+	AudioManager.play_music(race_music)
 	race_running = true
 	race_started.emit()
 	await get_tree().create_timer(0.8).timeout

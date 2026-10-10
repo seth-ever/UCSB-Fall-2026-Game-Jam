@@ -1,14 +1,16 @@
 [gd_scene format=3 uid="uid://bo7k8a6mearmc"]
 
-[ext_resource type="Script" uid="uid://gxlw1gh0ips" path="res://highway.gd" id="1_htopo"]
+[ext_resource type="Script" uid="uid://gxlw1gh0ips" path="res://Scipts/highway.gd" id="1_htopo"]
 [ext_resource type="PackedScene" uid="uid://cgp8g306w4cje" path="res://player.tscn" id="2_mdx7g"]
 [ext_resource type="Material" uid="uid://ddhfpy2oh7w31" path="res://Art/Materials/Asphalt023S_4K-JPG/asphalt_mat.tres" id="2_pu04k"]
 [ext_resource type="Material" uid="uid://dsrormlusmn12" path="res://Art/Materials/Concrete044C_4K-JPG/Concrete044C_4K-JPG.tres" id="3_cmgr2"]
 [ext_resource type="Material" uid="uid://ud5o6dn7rcjw" path="res://Art/Materials/road_lines.tres" id="4_53wp0"]
 [ext_resource type="PackedScene" uid="uid://cpl8dv2s4iaaf" path="res://Art/meshes/boost.tscn" id="4_v7vmg"]
+[ext_resource type="PackedScene" uid="uid://dh2daem640xdb" path="res://Art/meshes/Car.tscn" id="5_2ff4t"]
 [ext_resource type="Sky" uid="uid://v37n6w8ncwg8" path="res://Art/HDRIs/EveningSkyHDRI011A_4K/EveningSkyHDRI011A_4K.tres" id="5_d0n2m"]
 [ext_resource type="Material" uid="uid://d32hchusnjtg5" path="res://Art/Shaders/vaporwave_shader.tres" id="6_rr734"]
-[ext_resource type="Script" uid="uid://dk85mt2rwxkg6" path="res://race_ui.gd" id="8_bgqgp"]
+[ext_resource type="Script" uid="uid://dk85mt2rwxkg6" path="res://Scipts/race_ui.gd" id="8_bgqgp"]
+[ext_resource type="AudioStream" uid="uid://dq7qdfpasy6yo" path="res://Sounds/Music/music loop.wav" id="10_ukbbp"]
 
 [sub_resource type="Environment" id="Environment_b8hyw"]
 background_mode = 2
@@ -18,6 +20,7 @@ ambient_light_color = Color(0.85882354, 0.4745098, 0.2901961, 1)
 ambient_light_energy = 11.15
 fog_mode = 1
 fog_light_color = Color(0.85882354, 0.4745098, 0.2901961, 1)
+fog_density = 1.0
 fog_sky_affect = 0.0
 volumetric_fog_albedo = Color(0.85882354, 0.4745098, 0.2901961, 1)
 
@@ -36,6 +39,7 @@ script = ExtResource("1_htopo")
 road_material = ExtResource("2_pu04k")
 wall_material = ExtResource("3_cmgr2")
 boost_scene = ExtResource("4_v7vmg")
+car_scene = ExtResource("5_2ff4t")
 lines_material = ExtResource("4_53wp0")
 lines_tile_length = 60.0
 
@@ -54,6 +58,7 @@ mesh = SubResource("QuadMesh_lkdlq")
 
 [node name="RaceUI" type="CanvasLayer" parent="." unique_id=666856725]
 script = ExtResource("8_bgqgp")
+race_music = ExtResource("10_ukbbp")
 
 [node name="StartCountDownLabel" type="Label" parent="RaceUI" unique_id=1107869657]
 anchors_preset = 15

@@ -24,6 +24,7 @@ extends Node3D
 
 @export_group("Assets")
 @export var boost_scene : PackedScene
+@export var car_scene   : PackedScene
 
 @export_group("Road Markings")
 @export var lines_material : StandardMaterial3D
@@ -35,6 +36,10 @@ extends Node3D
 @export var boost_density : float = 40.0 / 5000.0
 @export var boost_amount : float = 18.0
 
+@export_group("Traffic")
+@export var traffic_density : float = 60.0 / 5000.0
+@export var traffic_speed_min : float = 10.0
+@export var traffic_speed_max : float = 20.0
 
 var curve: Curve3D
 var road_path: Path3D = null
@@ -45,6 +50,7 @@ var _rng := RandomNumberGenerator.new()
 var total_length: float = 0.0
 
 var _boosts : Array = []
+var _traffic : Array = []
 
 @onready var race_ui = $RaceUI
 @onready var player: Node3D = $Player
@@ -70,13 +76,16 @@ func _ready() -> void:
 	_build_road_lines()
 	_build_ocean()
 	_build_city()
+	
 	_spawn_boosts()
+	_spawn_traffic()
 	
 	player.setup(curve, road_length)
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _physics_process(delta: float) -> void:
+	_update_traffic(delta)
 	_check_boosts()
 
 
@@ -285,6 +294,7 @@ func _spawn_boosts() -> void:
 		var s : float = _rng.randf_range(20.0 , road_length - 60.0)
 		var lane_x : float = lane_centers[(_rng.randi() % 4)]
 		
+		
 		var boost_mesh = boost_scene.instantiate() as MeshInstance3D
 		add_child(boost_mesh)
 		
@@ -304,3 +314,50 @@ func _check_boosts() -> void:
 			b["active"] = false
 			(b["node"] as Node3D).visible = false
 			player.apply_boost(boost_amount)
+
+func _spawn_traffic() -> void:
+	var traffic_count = traffic_density * (road_length - 100.0)
+	for i in traffic_count:
+		var s : float = _rng.randf_range(40.0 , road_length - 60.0)
+		var lane_id = _rng.randi() % 4
+		var lane_x : float = lane_centers[lane_id]
+		
+		var oncoming : bool = lane_id < 2
+		var traffic_speed = _rng.randf_range(traffic_speed_min, traffic_speed_max)
+		
+		
+		var car_mesh = car_scene.instantiate() as Node3D
+		add_child(car_mesh)
+		
+		var xf := curve.sample_baked_with_rotation(s, true, true)
+		car_mesh.global_transform = Transform3D(xf.basis,
+			xf.origin + xf.basis * Vector3(lane_x , 0.1, 0))
+		
+		_traffic.append({"s": s, 
+			"lane_x": lane_x,
+			"speed": traffic_speed, 
+			"node": car_mesh, 
+			"oncoming": oncoming})
+	
+func _update_traffic(delta : float) -> void:
+	for car in _traffic:
+		if car['oncoming']:
+			car["s"] -= car["speed"] * delta
+			if car["s"] < -10.0:
+				car["s"] = road_length + 30.0
+		else:
+			car["s"] += car["speed"] * delta
+			if car["s"] > (road_length + 30.0):
+				car["s"] = -10.0
+		
+		var xf := curve.sample_baked_with_rotation(car["s"], true, true)
+		var lane_x : float = car["lane_x"]
+		var basis := xf.basis
+		
+		if car["oncoming"]:
+			basis = basis.rotated(basis.y, PI)
+		
+		car.node.global_transform = Transform3D(basis, xf.origin + xf.basis * Vector3(lane_x, 0, 0))
+		
+		
+			
