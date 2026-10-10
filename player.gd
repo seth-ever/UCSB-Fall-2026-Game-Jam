@@ -114,3 +114,4 @@ func _physics_process(delta: float) -> void:
 
 func apply_boost(amount : float) -> void:
 	boost_target = maxf(boost_target, amount)
+	

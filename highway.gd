@@ -76,8 +76,8 @@ func _ready() -> void:
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(delta: float) -> void:
-	pass
+func _physics_process(delta: float) -> void:
+	_check_boosts()
 
 
 
@@ -279,7 +279,7 @@ func on_race_finished(final_time : float) -> void:
 	print("Finished in ", final_time)
 
 func _spawn_boosts() -> void:
-	var boost_count = boost_density * road_length
+	var boost_count = boost_density * (road_length - 80.0)
 	
 	for i in boost_count:
 		var s : float = _rng.randf_range(20.0 , road_length - 60.0)
@@ -293,6 +293,14 @@ func _spawn_boosts() -> void:
 			xf.origin + xf.basis * Vector3(lane_x , 0.1, 0))
 		
 		_boosts.append({"s": s, "lane_x": lane_x, "node": boost_mesh, "active": true})
-		
-		
-		
+
+func _check_boosts() -> void:
+	var player_s: float = player.path_distance
+	var player_x: float = player.lateral_position
+	for b in _boosts:
+		if not b["active"]:
+			continue
+		if absf(b["s"] - player_s) < 3.0 and absf(b["lane_x"] - player_x) < 1.8:
+			b["active"] = false
+			(b["node"] as Node3D).visible = false
+			player.apply_boost(boost_amount)
