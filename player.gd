@@ -9,11 +9,16 @@ extends Node3D
 @export var lateral_movement_speed: float = 9.0
 @export var lateral_position_limit: float = 8.7
 
+@export_group("Feel")
+@export var lean_max_degrees: float = 22.0
+@export var lean_speed: float = 6.0
 
 
 var path_distance: float = 0.0
 var lateral_position: float = 2.3
 var speed: float = 0.0
+
+var _current_lean: float = 0.0
 
 var _curve: Curve3D = null
 var _road_length: float = 0.0
@@ -60,4 +65,6 @@ func _physics_process(delta: float) -> void:
 	global_transform = Transform3D(xf.basis, 
 	xf.origin + xf.basis * Vector3(lateral_position, 0.0, 0.0))
 	
-	
+	var target_lean : float = -steering * deg_to_rad(lean_max_degrees)
+	_current_lean = lerpf(_current_lean, target_lean, lean_speed * delta)
+	camera.rotation.z = _current_lean
