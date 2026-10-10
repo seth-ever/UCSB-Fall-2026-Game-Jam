@@ -10,7 +10,7 @@
 [ext_resource type="Sky" uid="uid://v37n6w8ncwg8" path="res://Art/HDRIs/EveningSkyHDRI011A_4K/EveningSkyHDRI011A_4K.tres" id="5_d0n2m"]
 [ext_resource type="Material" uid="uid://d32hchusnjtg5" path="res://Art/Shaders/vaporwave_shader.tres" id="6_rr734"]
 [ext_resource type="Script" uid="uid://dk85mt2rwxkg6" path="res://Scipts/race_ui.gd" id="8_bgqgp"]
-[ext_resource type="AudioStream" uid="uid://dq7qdfpasy6yo" path="res://Sounds/Music/music loop.wav" id="10_ukbbp"]
+[ext_resource type="AudioStream" uid="uid://bpqpwuewnrpxb" path="res://Sounds/Music/music loop fixed.wav" id="11_2ff4t"]
 
 [sub_resource type="Environment" id="Environment_b8hyw"]
 background_mode = 2
@@ -59,7 +59,7 @@ mesh = SubResource("QuadMesh_lkdlq")
 
 [node name="RaceUI" type="CanvasLayer" parent="." unique_id=666856725]
 script = ExtResource("8_bgqgp")
-race_music = ExtResource("10_ukbbp")
+race_music = ExtResource("11_2ff4t")
 
 [node name="StartCountDownLabel" type="Label" parent="RaceUI" unique_id=1107869657]
 anchors_preset = 15

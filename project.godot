@@ -11,9 +11,13 @@ config_version=5
 [application]
 
 config/name="UCSB Fall 2026 game Jam"
-run/main_scene="uid://bo7k8a6mearmc"
+run/main_scene="uid://okmlugx2v7"
 config/features=PackedStringArray("4.7", "Forward Plus")
 config/icon="res://icon.svg"
+
+[audio]
+
+buses/default_bus_layout="uid://xl0a3dgnaofv"
 
 [autoload]
 
@@ -21,6 +25,7 @@ AudioManager="*uid://c0o0vrswkhysc"
 
 [display]
 
+window/stretch/mode="canvas_items"
 window/stretch/aspect="expand"
 
 [input]

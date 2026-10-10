@@ -1,0 +1,84 @@
+[gd_scene format=3 uid="uid://okmlugx2v7"]
+
+[ext_resource type="Script" uid="uid://c2xc86w0la0m3" path="res://Scipts/main_menu.gd" id="1_06t4h"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_rhts7"]
+font_size = 95
+
+[node name="Control" type="Control" unique_id=1264898284]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_06t4h")
+
+[node name="Background" type="ColorRect" parent="." unique_id=1589021384]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0.21176471, 0.3764706, 1)
+
+[node name="MenuBox" type="VBoxContainer" parent="." unique_id=1223614984]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -20.0
+offset_top = -23.5
+offset_right = 20.0
+offset_bottom = 23.5
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 30
+
+[node name="TitleLabel" type="Label" parent="MenuBox" unique_id=1105834360]
+layout_mode = 2
+text = "Accelerate
+"
+label_settings = SubResource("LabelSettings_rhts7")
+
+[node name="PlayButton" type="Button" parent="MenuBox" unique_id=790549152]
+custom_minimum_size = Vector2(300, 70)
+layout_mode = 2
+text = "PLAY"
+
+[node name="LeaderboardButton" type="Button" parent="MenuBox" unique_id=826662051]
+custom_minimum_size = Vector2(300, 70)
+layout_mode = 2
+text = "BEST TIMES"
+
+[node name="LeaderboardPanel" type="PanelContainer" parent="." unique_id=263463596]
+visible = false
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -44.0
+offset_top = -31.0
+offset_right = 44.0
+offset_bottom = 31.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="LeaderboardPanel" unique_id=1690461054]
+layout_mode = 2
+
+[node name="Best Times" type="Label" parent="LeaderboardPanel/VBoxContainer" unique_id=1472064]
+layout_mode = 2
+text = "BEST TIMES"
+horizontal_alignment = 1
+
+[node name="ScoresLabel" type="Label" parent="LeaderboardPanel/VBoxContainer" unique_id=1946572032]
+layout_mode = 2
+
+[node name="BackButton" type="Button" parent="LeaderboardPanel/VBoxContainer" unique_id=832790208]
+layout_mode = 2
