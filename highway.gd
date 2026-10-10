@@ -11,12 +11,14 @@ extends Node3D
 
 @export_group("Scenery")
 @export var ocean_y : float = -45.0
+@export var building_density : float = 12.0 / 1000.0 
 
 @export_group("Materials")
 @export var road_material: StandardMaterial3D
 @export var wall_material: StandardMaterial3D
 @export var ocean_material: StandardMaterial3D
 @export var cliff_material: StandardMaterial3D
+@export var building_material: StandardMaterial3D
 
 
 
@@ -38,6 +40,7 @@ func _ready() -> void:
 	_generate_curve()
 	_build_road()
 	_build_ocean()
+	_build_city()
 	
 	player.setup(curve, road_length)
 
@@ -64,6 +67,9 @@ func _init_materials() -> void:
 	if cliff_material == null:
 		cliff_material = StandardMaterial3D.new()
 		cliff_material.albedo_color = Color(0.36, 0.31, 0.26)
+	if building_material == null:
+		building_material  = StandardMaterial3D.new()
+		building_material.albedo_color = Color(0.22, 0.2, 0.25)
 	
 	
 
@@ -173,5 +179,26 @@ func _build_ocean() -> void:
 	var midPoint := curve.sample_baked(total_length * 0.5, true)
 	ocean.global_position = Vector3(midPoint.x + 600, ocean_y, midPoint.z) #Offest to the right side
 	
+func _build_city() -> void:
+	var total_building_count = total_length * building_density
+	for i in total_building_count:
+		var s := _rng.randf_range(0.0, total_length)
+		var xf := curve.sample_baked_with_rotation(s, true, true)
+		var out := _rng.randf_range(25.0, 160.0)
+		var height := _rng.randf_range(12.0, 70.0)
+		var width := _rng.randf_range(8.0, 22.0)
+		var depth := _rng.randf_range(8.0, 22.0)
+		
+		var meshInstance := MeshInstance3D.new()
+		var mesh := BoxMesh.new()
+		mesh.size = Vector3(width, height, depth)
+		mesh.material = building_material
+		meshInstance.mesh = mesh
+		add_child(meshInstance)
+		
+		meshInstance.global_position = xf.origin + xf.basis * Vector3(-out, height/2.0 -4.0, 0)
+		meshInstance.rotation.y = _rng.randf_range(0, TAU)
+		meshInstance.visibility_range_end = 2000.0
+		meshInstance.visibility_range_end_margin = 50.0
 		
 		
