@@ -36,6 +36,7 @@ font_size = 50
 
 [node name="Highway" type="Node3D" unique_id=159052111]
 script = ExtResource("1_htopo")
+road_length = 5000.0
 road_material = ExtResource("2_pu04k")
 wall_material = ExtResource("3_cmgr2")
 boost_scene = ExtResource("4_v7vmg")

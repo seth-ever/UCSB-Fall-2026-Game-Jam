@@ -20,12 +20,19 @@ signal finished
 @export var boost_decay : float = 6.0
 @export var boost_ramp_speed : float = 45.0
 
+@export_group("Crash")
+@export var crash_speed_multiplier : float = 0.25
+@export var crash_iframes : float = 1.2
+
+
 @export_group("Feel")
 @export var lean_max_degrees: float = 22.0
 @export var lean_speed: float = 6.0
 @export var base_player_fov: float = 75.0
 @export var fov_per_speed: float = 0.35
 @export var fov_change_speed: float = 4.0
+
+
 
 
 var path_distance: float = 0.0
@@ -42,6 +49,8 @@ var _finished : bool = false
 
 var boost_bonus  : float = 0.0
 var boost_target : float = 0.0
+
+var _iframes_remaining : float = 0.0
 
 var _current_aberration : float = 0.0
 
@@ -70,8 +79,6 @@ func apply_aberration(delta: float) -> void:
 
 func _physics_process(delta: float) -> void:
 
-	
-
 	if _curve == null:
 		return
 		
@@ -91,6 +98,8 @@ func _physics_process(delta: float) -> void:
 	#Add boost process
 	boost_target = move_toward(boost_target, 0.0, boost_decay * delta)
 	boost_bonus = move_toward(boost_bonus, boost_target, boost_ramp_speed * delta)
+	
+	_iframes_remaining -= delta
 	
 	var total_speed : float = get_total_speed()
 	path_distance += total_speed * delta *int( _started)
@@ -115,3 +124,10 @@ func _physics_process(delta: float) -> void:
 func apply_boost(amount : float) -> void:
 	boost_target = maxf(boost_target, amount)
 	
+func crash() -> void:
+	if _iframes_remaining > 0.0:
+		return
+	speed *= crash_speed_multiplier
+	boost_bonus = 0
+	boost_target = 0
+	_iframes_remaining = crash_iframes

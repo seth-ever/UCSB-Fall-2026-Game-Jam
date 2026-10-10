@@ -87,6 +87,7 @@ func _ready() -> void:
 func _physics_process(delta: float) -> void:
 	_update_traffic(delta)
 	_check_boosts()
+	_check_traffic()
 
 
 
@@ -358,6 +359,20 @@ func _update_traffic(delta : float) -> void:
 			basis = basis.rotated(basis.y, PI)
 		
 		car.node.global_transform = Transform3D(basis, xf.origin + xf.basis * Vector3(lane_x, 0, 0))
-		
-		
-			
+
+func _check_traffic() -> void:
+	var player_s: float = player.path_distance
+	var player_x: float = player.lateral_position
+	
+	var player_half_width : float = 0.45 
+	var car_half_width : float = 1.5
+	var car_half_length : float = 3.0
+	
+	var side_gap : float = player_half_width + car_half_width
+	var front_back_gap : float = car_half_length + 1.0
+	
+	for car in _traffic:
+		if absf(car["lane_x"] - player_x) > side_gap:
+			continue
+		if absf(car["s"] - player_s) < front_back_gap:
+			player.crash()
