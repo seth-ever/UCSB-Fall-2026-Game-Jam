@@ -1,0 +1,11 @@
+[gd_scene format=3 uid="uid://bo7k8a6mearmc"]
+
+[ext_resource type="Script" uid="uid://gxlw1gh0ips" path="res://highway.gd" id="1_htopo"]
+
+[node name="Highway" type="Node3D" unique_id=159052111]
+script = ExtResource("1_htopo")
+total_length = null
+segment_length = null
+lane_width = null
+max_turn_for_segment = null
+max_direction = null
