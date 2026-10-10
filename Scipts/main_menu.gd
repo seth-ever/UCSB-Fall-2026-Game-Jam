@@ -16,9 +16,6 @@ func _ready() -> void:
 	pass # Replace with function body.
 
 
-# Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(delta: float) -> void:
-	pass
 
 
 func _on_play_pressed() -> void:
@@ -31,11 +28,14 @@ func _on_leaderboard_pressed() -> void:
 	
 
 func build_scores_text() -> String:
-	var times := [120000, 180000, 240000] #ms
+	if Leaderboard.entries.is_empty():
+		return "No Times Yet"
 	var lines := []
-	for i in times.size():
-		lines.append("%d.  %s" % [i + 1, format_ms(times[i])])
+	for i in Leaderboard.entries.size():
+		var entry = Leaderboard.entries[i]
+		lines.append("%2d.  %-3s  %s" % [i + 1, entry.name, format_ms(entry.time_ms)])
 	return "\n".join(lines)
+		
 		
 func format_ms(ms: int) ->String:
 	return "%02d:%02d.%03d" % [ms / 60000, (ms / 1000) % 60, ms % 1000]

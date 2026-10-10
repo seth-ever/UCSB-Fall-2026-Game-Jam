@@ -286,7 +286,11 @@ func _build_road_lines() -> void:
 	add_child(meshInstance)
 
 func on_race_finished(final_time : float) -> void:
-	print("Finished in ", final_time)
+	var time_ms := roundi(final_time * 1000.0)
+	if Leaderboard.qualifies(time_ms):
+		race_ui.show_name_entry(time_ms)
+	else:
+		pass
 
 func _spawn_boosts() -> void:
 	var boost_count = boost_density * (road_length - 80.0)
