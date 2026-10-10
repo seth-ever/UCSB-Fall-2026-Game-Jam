@@ -9,9 +9,13 @@ extends Node3D
 @export var max_turn_for_segment: float = 0.3
 @export var max_direction: float = 0.9
 
+@export_group("Scenery")
+@export var ocean_y : float = -45.0
+
 @export_group("Materials")
 @export var road_material: StandardMaterial3D
 @export var wall_material: StandardMaterial3D
+@export var ocean_material: StandardMaterial3D
 
 
 
@@ -32,6 +36,7 @@ func _ready() -> void:
 	_init_materials()
 	_generate_curve()
 	_build_road()
+	_build_ocean()
 	
 	player.setup(curve, road_length)
 
@@ -49,6 +54,12 @@ func _init_materials() -> void:
 	if wall_material == null:
 		wall_material = StandardMaterial3D.new()
 		wall_material.albedo_color = Color(0.4, 0.4, 0.4)
+	if ocean_material == null:
+		var om := StandardMaterial3D.new()
+		om.albedo_color = Color(0.09,0.28,0.45)
+		om.metalic = 0.35
+		om.roughness = 0.12
+		ocean_material = om
 	
 
 func _generate_curve() -> void:
@@ -125,6 +136,19 @@ func _build_road() -> void:
 		
 		#Add Cliff face on ocean side
 		
-		
+func _build_ocean() -> void:
+	var ocean := MeshInstance3D.new()
+	var plane := PlaneMesh.new()
+	plane.size = Vector2(90000, 90000)
+	#Subdivide so that a shader can be applied later
+	plane.subdivide_width = 200
+	plane.subdivide_depth = 200
+	plane.material = ocean_material
+	ocean.mesh = plane
+	add_child(ocean)
+	
+	var midPoint := curve.sample_baked(total_length * 0.5, true)
+	ocean.global_position = Vector3(midPoint.x + 600, ocean_y, midPoint.z) #Offest to the right side
+	
 		
 		
