@@ -1,0 +1,12 @@
+[gd_resource type="StandardMaterial3D" format=3 uid="uid://ud5o6dn7rcjw"]
+
+[ext_resource type="Texture2D" uid="uid://cf02178f0p362" path="res://Art/Materials/RoadLines011_4K-JPG/RoadLines011_4K-JPG_Color_corrected.png" id="1_qhtbk"]
+[ext_resource type="Texture2D" uid="uid://dbnafg4qbhg8c" path="res://Art/Materials/RoadLines011_4K-JPG/RoadLines011_4K-JPG_NormalGL.jpg" id="2_nu3mo"]
+[ext_resource type="Texture2D" uid="uid://ceqa0q5dtsgst" path="res://Art/Materials/RoadLines011_4K-JPG/RoadLines011_4K-JPG_Roughness.jpg" id="3_55ihl"]
+
+[resource]
+transparency = 1
+albedo_texture = ExtResource("1_qhtbk")
+roughness_texture = ExtResource("3_55ihl")
+normal_enabled = true
+normal_texture = ExtResource("2_nu3mo")

@@ -10,6 +10,8 @@ uniform vec3 neonCyan_color = vec3(0.0, 0.9, 0.9);
 
 //Screen Distortion
 uniform float aberration_amount : hint_range(0.0, 0.05) = 0.005;
+uniform float aberration_inner_radius : hint_range(0.0, 0.7) = 0.1;
+uniform float aberration_falloff_power : hint_range(0.5, 0.5) = 2.0;
 
 void vertex() {
 	POSITION = vec4(VERTEX.xy, 1.0, 1.0);
@@ -20,13 +22,18 @@ void fragment() {
 	
 	//Chromatic Aberation
 	vec2 direction = SCREEN_UV - vec2(0.5);
-	float edge = dot(direction, direction);
-	vec2 offset = direction * edge * aberration_amount;
+	float dist = length(direction);
 	
-	vec2 shrunk_uv = vec2(0.5) + direction * (1.0 - aberration_amount);
+	//0 inside inner radius, increase to 1 at corners
+	float t = max(dist - aberration_inner_radius, 0.0) / max(0.7071 - aberration_inner_radius, 0.0001);
+	t = pow(clamp(t, 0.0, 1.0), aberration_falloff_power);
+	
+	vec2 offset = (direction / max(dist, 0.0001)) * t * aberration_amount;
+
+	vec2 shrunk_uv = vec2(0.5) + direction * (1.0 - 2.0 * aberration_amount);
 	
 	float r = texture(screen_texture, shrunk_uv + offset).r;
-	float g = texture(screen_texture, uv).g; //No green shift, want to capture sunset colors
+	float g = texture(screen_texture, shrunk_uv).g; //No green shift, want to capture sunset colors
 	float b = texture(screen_texture, shrunk_uv - offset).b;
 	vec3 base_color = vec3(r, g, b);
 	

@@ -20,6 +20,11 @@ extends Node3D
 @export var cliff_material: StandardMaterial3D
 @export var building_material: StandardMaterial3D
 
+@export_group("Road Markings")
+@export var lines_material : StandardMaterial3D
+@export var lines_tile_length : float = 12.0
+@export var lines_height : float = 0.015
+@export var lines_step : float = 4.0
 
 
 var curve: Curve3D
@@ -39,6 +44,7 @@ func _ready() -> void:
 	_init_materials()
 	_generate_curve()
 	_build_road()
+	_build_road_lines()
 	_build_ocean()
 	_build_city()
 	
@@ -200,5 +206,48 @@ func _build_city() -> void:
 		meshInstance.rotation.y = _rng.randf_range(0, TAU)
 		meshInstance.visibility_range_end = 2000.0
 		meshInstance.visibility_range_end_margin = 50.0
+		meshInstance.visibility_range_fade_mode = GeometryInstance3D.VISIBILITY_RANGE_FADE_SELF
 		
 		
+func _build_road_lines() -> void:
+	if lines_material == null:
+		return
+	
+	var half := lane_width * 2.0
+	var surfaceTool := SurfaceTool.new()
+	surfaceTool.begin(Mesh.PRIMITIVE_TRIANGLES)
+	
+	var prev_left :=  Vector3.ZERO
+	var prev_right := Vector3.ZERO
+	var prev_v := 0.0
+	var first := true
+	
+	var s := 0.0
+	while s <= total_length:
+		var xf := curve.sample_baked_with_rotation(s, true, true)
+		var left:  Vector3 = xf.origin + xf.basis * Vector3(-half, lines_height, 0)
+		var right: Vector3 = xf.origin + xf.basis * Vector3( half, lines_height, 0)
+		var v : float = s / lines_tile_length
+		var up : Vector3 = xf.basis.y
+		
+		if not first:
+			surfaceTool.set_normal(up); surfaceTool.set_uv(Vector2(0.0, prev_v)); surfaceTool.add_vertex(prev_left)
+			surfaceTool.set_normal(up); surfaceTool.set_uv(Vector2(1.0, v));      surfaceTool.add_vertex(right)
+			surfaceTool.set_normal(up); surfaceTool.set_uv(Vector2(1.0, prev_v)); surfaceTool.add_vertex(prev_right)
+			
+			surfaceTool.set_normal(up); surfaceTool.set_uv(Vector2(0.0, prev_v)); surfaceTool.add_vertex(prev_left)
+			surfaceTool.set_normal(up); surfaceTool.set_uv(Vector2(0.0, v));      surfaceTool.add_vertex(left)
+			surfaceTool.set_normal(up); surfaceTool.set_uv(Vector2(1.0, v));      surfaceTool.add_vertex(right)
+			
+		prev_left  = left
+		prev_right = right
+		prev_v     = v
+		first = false
+		s += lines_step
+	
+	var mesh := surfaceTool.commit()
+	var meshInstance := MeshInstance3D.new()
+	meshInstance.mesh = mesh
+	meshInstance.material_override= lines_material
+	meshInstance.extra_cull_margin = 16384.0
+	add_child(meshInstance)
