@@ -12,6 +12,9 @@ extends Node3D
 @export_group("Feel")
 @export var lean_max_degrees: float = 22.0
 @export var lean_speed: float = 6.0
+@export var base_player_fov: float = 75.0
+@export var fov_per_speed: float = 0.35
+@export var fov_change_speed: float = 4.0
 
 
 var path_distance: float = 0.0
@@ -68,3 +71,6 @@ func _physics_process(delta: float) -> void:
 	var target_lean : float = -steering * deg_to_rad(lean_max_degrees)
 	_current_lean = lerpf(_current_lean, target_lean, lean_speed * delta)
 	camera.rotation.z = _current_lean
+	
+	var target_fov : float = base_player_fov + total_speed * fov_per_speed
+	camera.fov = lerpf(camera.fov, target_fov, fov_change_speed * delta)
