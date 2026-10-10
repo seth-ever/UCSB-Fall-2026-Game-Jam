@@ -16,6 +16,7 @@ extends Node3D
 @export var road_material: StandardMaterial3D
 @export var wall_material: StandardMaterial3D
 @export var ocean_material: StandardMaterial3D
+@export var cliff_material: StandardMaterial3D
 
 
 
@@ -60,6 +61,10 @@ func _init_materials() -> void:
 		om.metalic = 0.35
 		om.roughness = 0.12
 		ocean_material = om
+	if cliff_material == null:
+		cliff_material = StandardMaterial3D.new()
+		cliff_material.albedo_color = Color(0.36, 0.31, 0.26)
+	
 	
 
 func _generate_curve() -> void:
@@ -133,8 +138,23 @@ func _build_road() -> void:
 		])
 		wall.material = wall_material
 		
-		
-		#Add Cliff face on ocean side
+		#Cliff on Ocean side
+		var cliff := CSGPolygon3D.new()
+		add_child(cliff)
+		cliff.mode = CSGPolygon3D.MODE_PATH
+		cliff.path_node = cliff.get_path_to(path)
+		cliff.path_interval_type = CSGPolygon3D.PATH_INTERVAL_DISTANCE
+		cliff.path_interval = 8.0
+		cliff.path_rotation = CSGPolygon3D.PATH_ROTATION_PATH_FOLLOW
+		cliff.smooth_faces = false
+		cliff.use_collision = false
+		cliff.polygon = PackedVector2Array([
+			Vector2(half + 0.6, -0.5),
+			Vector2(half + 6.0, ocean_y - 5.0),
+			Vector2(half - 2.0, ocean_y - 5.0),
+			Vector2(half - 2.0, -0.5),
+		])
+		cliff.material = cliff_material
 		
 func _build_ocean() -> void:
 	var ocean := MeshInstance3D.new()
