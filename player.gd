@@ -16,6 +16,10 @@ signal finished
 @export var lateral_movement_speed: float = 9.0
 @export var lateral_position_limit: float = 8.7
 
+@export_group("Boost")
+@export var boost_decay : float = 6.0
+@export var boost_ramp_speed : float = 45.0
+
 @export_group("Feel")
 @export var lean_max_degrees: float = 22.0
 @export var lean_speed: float = 6.0
@@ -36,6 +40,9 @@ var _road_length: float = 0.0
 var _started  : bool = false
 var _finished : bool = false
 
+var boost_bonus  : float = 0.0
+var boost_target : float = 0.0
+
 var _current_aberration : float = 0.0
 
 @onready var camera: Camera3D = $Camera3D
@@ -47,7 +54,7 @@ func setup(curve: Curve3D, road_length: float) -> void:
 	path_distance = 5.0
 
 func get_total_speed() -> float:
-	return minf(speed, max_absolute_speed)
+	return minf(speed + boost_bonus, max_absolute_speed)
 	
 func apply_aberration(delta: float) -> void:
 	var total_speed = get_total_speed()
@@ -82,6 +89,8 @@ func _physics_process(delta: float) -> void:
 		speed = move_toward(speed, 0.0, coast_decelleration * delta)  #Coasting, lose some speed
 	
 	#Add boost process
+	boost_target = move_toward(boost_target, 0.0, boost_decay * delta)
+	boost_bonus = move_toward(boost_bonus, boost_target, boost_ramp_speed * delta)
 	
 	var total_speed : float = get_total_speed()
 	path_distance += total_speed * delta *int( _started)
@@ -102,3 +111,6 @@ func _physics_process(delta: float) -> void:
 	camera.fov = lerpf(camera.fov, target_fov, fov_change_speed * delta)
 	
 	apply_aberration(delta)
+
+func apply_boost(amount : float) -> void:
+	boost_target = maxf(boost_target, amount)

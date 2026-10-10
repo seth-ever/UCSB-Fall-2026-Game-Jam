@@ -5,6 +5,7 @@
 [ext_resource type="Material" uid="uid://ddhfpy2oh7w31" path="res://Art/Materials/Asphalt023S_4K-JPG/asphalt_mat.tres" id="2_pu04k"]
 [ext_resource type="Material" uid="uid://dsrormlusmn12" path="res://Art/Materials/Concrete044C_4K-JPG/Concrete044C_4K-JPG.tres" id="3_cmgr2"]
 [ext_resource type="Material" uid="uid://ud5o6dn7rcjw" path="res://Art/Materials/road_lines.tres" id="4_53wp0"]
+[ext_resource type="PackedScene" uid="uid://cpl8dv2s4iaaf" path="res://Art/meshes/boost.tscn" id="4_v7vmg"]
 [ext_resource type="Sky" uid="uid://v37n6w8ncwg8" path="res://Art/HDRIs/EveningSkyHDRI011A_4K/EveningSkyHDRI011A_4K.tres" id="5_d0n2m"]
 [ext_resource type="Material" uid="uid://d32hchusnjtg5" path="res://Art/Shaders/vaporwave_shader.tres" id="6_rr734"]
 [ext_resource type="Script" uid="uid://dk85mt2rwxkg6" path="res://race_ui.gd" id="8_bgqgp"]
@@ -32,8 +33,10 @@ font_size = 50
 
 [node name="Highway" type="Node3D" unique_id=159052111]
 script = ExtResource("1_htopo")
+road_length = 5000.0
 road_material = ExtResource("2_pu04k")
 wall_material = ExtResource("3_cmgr2")
+boost_scene = ExtResource("4_v7vmg")
 lines_material = ExtResource("4_53wp0")
 lines_tile_length = 60.0
 

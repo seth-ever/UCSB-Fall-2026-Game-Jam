@@ -3,7 +3,6 @@ extends Node3D
 @export var road_length: float = 10000.0
 @export var runoff_length: float = 1000.0
 @export var segment_length: float = 40.0
-
 @export var lane_width: float = 4.6
 
 @export var max_turn_for_segment: float = 0.3
@@ -11,9 +10,10 @@ extends Node3D
 
 @export var generation_seed : int = -1
 
+
 @export_group("Scenery")
 @export var ocean_y : float = -45.0
-@export var building_density : float = 12.0 / 1000.0 
+@export var building_density : float = 12.0 / 500.0 
 
 @export_group("Materials")
 @export var road_material: StandardMaterial3D
@@ -22,18 +22,29 @@ extends Node3D
 @export var cliff_material: StandardMaterial3D
 @export var building_material: StandardMaterial3D
 
+@export_group("Assets")
+@export var boost_scene : PackedScene
+
 @export_group("Road Markings")
 @export var lines_material : StandardMaterial3D
 @export var lines_tile_length : float = 12.0
 @export var lines_height : float = 0.015
 @export var lines_step : float = 4.0
 
+@export_group("Boosts")
+@export var boost_density : float = 40.0 / 5000.0
+@export var boost_amount : float = 18.0
+
 
 var curve: Curve3D
 var road_path: Path3D = null
 
+var lane_centers :Array = [-6.39, -2.3, 2.3, 6.9]
+
 var _rng := RandomNumberGenerator.new()
 var total_length: float = 0.0
+
+var _boosts : Array = []
 
 @onready var race_ui = $RaceUI
 @onready var player: Node3D = $Player
@@ -59,6 +70,7 @@ func _ready() -> void:
 	_build_road_lines()
 	_build_ocean()
 	_build_city()
+	_spawn_boosts()
 	
 	player.setup(curve, road_length)
 
@@ -220,7 +232,6 @@ func _build_city() -> void:
 		meshInstance.visibility_range_end_margin = 50.0
 		meshInstance.visibility_range_fade_mode = GeometryInstance3D.VISIBILITY_RANGE_FADE_SELF
 		
-		
 func _build_road_lines() -> void:
 	if lines_material == null:
 		return
@@ -266,3 +277,22 @@ func _build_road_lines() -> void:
 
 func on_race_finished(final_time : float) -> void:
 	print("Finished in ", final_time)
+
+func _spawn_boosts() -> void:
+	var boost_count = boost_density * road_length
+	
+	for i in boost_count:
+		var s : float = _rng.randf_range(20.0 , road_length - 60.0)
+		var lane_x : float = lane_centers[(_rng.randi() % 4)]
+		
+		var boost_mesh = boost_scene.instantiate() as MeshInstance3D
+		add_child(boost_mesh)
+		
+		var xf := curve.sample_baked_with_rotation(s, true, true)
+		boost_mesh.global_transform = Transform3D(xf.basis,
+			xf.origin + xf.basis * Vector3(lane_x , 0.1, 0))
+		
+		_boosts.append({"s": s, "lane_x": lane_x, "node": boost_mesh, "active": true})
+		
+		
+		
