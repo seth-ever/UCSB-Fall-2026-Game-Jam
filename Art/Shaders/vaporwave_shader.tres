@@ -1,0 +1,11 @@
+[gd_resource type="ShaderMaterial" format=3 uid="uid://d32hchusnjtg5"]
+
+[ext_resource type="Shader" uid="uid://5r6eb0ddxmgm" path="res://Art/Shaders/vaporwave_filter.gdshader" id="1_ygf45"]
+
+[resource]
+render_priority = 0
+shader = ExtResource("1_ygf45")
+shader_parameter/vapor_tint_strength = 0.0
+shader_parameter/neonPink_color = Vector3(0.9, 0.1, 0.6)
+shader_parameter/neonCyan_color = Vector3(0, 0.9, 0.9)
+shader_parameter/aberration_amount = 0.005

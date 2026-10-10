@@ -1,5 +1,10 @@
 extends Node3D
 
+@export_group("Visual Effect")
+@export var aberration_material: ShaderMaterial
+@export var max_aberration : float = 0.03
+@export var aberration_smoothing : float = 4.0
+
 @export_group("Bike Movement")
 @export var max_natural_speed: float = 45.0
 @export var max_absolute_speed: float = 68.0
@@ -27,6 +32,8 @@ var _curve: Curve3D = null
 var _road_length: float = 0.0
 var _finished: bool = false
 
+var _current_aberration : float = 0.0
+
 @onready var camera: Camera3D = $Camera3D
 
 
@@ -38,6 +45,18 @@ func setup(curve: Curve3D, road_length: float) -> void:
 func get_total_speed() -> float:
 	return minf(speed, max_absolute_speed)
 	
+func apply_aberration(delta: float) -> void:
+	var total_speed = get_total_speed()
+	var t := clampf(inverse_lerp(0, max_absolute_speed, total_speed), 0.0, 1.0)
+	t = t * t
+	var target_aberration : float = t * max_aberration
+	
+	_current_aberration = lerpf(_current_aberration, target_aberration, 1.0 - exp(-aberration_smoothing * delta))
+	
+	aberration_material.set_shader_parameter("aberration_amount", _current_aberration)
+	
+	
+
 func _physics_process(delta: float) -> void:
 	if _curve == null:
 		return
@@ -74,3 +93,5 @@ func _physics_process(delta: float) -> void:
 	
 	var target_fov : float = base_player_fov + total_speed * fov_per_speed
 	camera.fov = lerpf(camera.fov, target_fov, fov_change_speed * delta)
+	
+	apply_aberration(delta)

@@ -5,6 +5,7 @@
 [ext_resource type="Material" uid="uid://ddhfpy2oh7w31" path="res://Art/Materials/Asphalt023S_4K-JPG/asphalt_mat.tres" id="2_pu04k"]
 [ext_resource type="Material" uid="uid://dsrormlusmn12" path="res://Art/Materials/Concrete044C_4K-JPG/Concrete044C_4K-JPG.tres" id="3_cmgr2"]
 [ext_resource type="Sky" uid="uid://v37n6w8ncwg8" path="res://Art/HDRIs/EveningSkyHDRI011A_4K/EveningSkyHDRI011A_4K.tres" id="5_d0n2m"]
+[ext_resource type="Material" uid="uid://d32hchusnjtg5" path="res://Art/Shaders/vaporwave_shader.tres" id="6_rr734"]
 
 [sub_resource type="Environment" id="Environment_b8hyw"]
 background_mode = 2
@@ -13,12 +14,22 @@ ambient_light_source = 3
 ambient_light_color = Color(0.85871255, 0.4763319, 0.29113364, 1)
 ambient_light_energy = 11.15
 
+[sub_resource type="QuadMesh" id="QuadMesh_lkdlq"]
+material = ExtResource("6_rr734")
+size = Vector2(2, 2)
+
 [node name="Highway" type="Node3D" unique_id=159052111]
 script = ExtResource("1_htopo")
 road_material = ExtResource("2_pu04k")
 wall_material = ExtResource("3_cmgr2")
 
 [node name="Player" parent="." unique_id=798075125 instance=ExtResource("2_mdx7g")]
+aberration_material = ExtResource("6_rr734")
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=1347781344]
 environment = SubResource("Environment_b8hyw")
+
+[node name="PostProcessFilter" type="MeshInstance3D" parent="." unique_id=1259403919]
+cast_shadow = 0
+extra_cull_margin = 16384.0
+mesh = SubResource("QuadMesh_lkdlq")
