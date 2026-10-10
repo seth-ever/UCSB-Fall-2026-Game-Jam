@@ -23,7 +23,7 @@ extends Node3D
 var curve: Curve3D
 var road_path: Path3D = null
 
-var rng := RandomNumberGenerator.new()
+var _rng := RandomNumberGenerator.new()
 var total_length: float = 0.0
 
 
@@ -76,10 +76,13 @@ func _generate_curve() -> void:
 	var segment_count := int(total_length / segment_length) + 1
 	for i in segment_count:
 		points.append(position)
-		direction += rng.randf_range(-max_turn_for_segment, max_turn_for_segment)
+		direction += _rng.randf_range(-max_turn_for_segment, max_turn_for_segment)
 		direction = clampf(direction, -max_direction, max_direction)
 		var forward_position := Vector3(sin(direction), 0 , -cos(direction))
 		position += forward_position * segment_length
+		position.y += _rng.randf_range(-1.2, 1.2)
+		position.y = clampf(position.y, -6.0, 6.0)
+		
 		
 	for p in points:
 		curve.add_point(p)
