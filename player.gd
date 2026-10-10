@@ -87,7 +87,7 @@ func _physics_process(delta: float) -> void:
 	path_distance += total_speed * delta *int( _started)
 	
 	var steering := Input.get_axis("move_left", "move_right")
-	lateral_position += steering * lateral_movement_speed *delta *int( _started)
+	lateral_position += steering * lateral_movement_speed *delta * (total_speed / max_absolute_speed)
 	lateral_position = clampf(lateral_position, -lateral_position_limit, lateral_position_limit)
 	
 	var xf := _curve.sample_baked_with_rotation(path_distance, true, true)
