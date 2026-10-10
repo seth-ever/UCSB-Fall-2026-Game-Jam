@@ -9,6 +9,8 @@ extends Node3D
 @export var max_turn_for_segment: float = 0.3
 @export var max_direction: float = 0.9
 
+@export var generation_seed : int = -1
+
 @export_group("Scenery")
 @export var ocean_y : float = -45.0
 @export var building_density : float = 12.0 / 1000.0 
@@ -38,6 +40,11 @@ var total_length: float = 0.0
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
+	if generation_seed >= 0:
+		_rng.seed = generation_seed
+	else:
+		_rng.randomize()
+	
 	race_ui.race_started.connect(func(): player._started = true)
 	player.finished.connect(race_ui.finish_race)
 	race_ui.race_finished.connect(on_race_finished)
