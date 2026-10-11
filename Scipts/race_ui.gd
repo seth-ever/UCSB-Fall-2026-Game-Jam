@@ -7,6 +7,7 @@ signal race_finished(final_time : float)
 @export var race_music : AudioStream
 @export var beep_sfx : AudioStream
 @export var go_sfx : AudioStream
+@export var win_sfx : AudioStream
 
 @onready var countdown_label : Label = $StartCountDownLabel
 @onready var timer_label : Label = $RaceTimerLabel
@@ -63,6 +64,7 @@ func finish_race() -> void:
 	race_finished.emit(time_elapsed)
 
 func show_name_entry(time_ms: int) -> void:
+	AudioManager.play_sfx(win_sfx)
 	final_time = time_ms
 	name_panel.show()
 	name_edit.grab_focus()

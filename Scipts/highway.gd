@@ -34,11 +34,11 @@ extends Node3D
 @export var lines_step : float = 4.0
 
 @export_group("Boosts")
-@export var boost_density : float = 40.0 / 5000.0
-@export var boost_amount : float = 18.0
+@export var boost_density : float = 60.0 / 5000.0
+@export var boost_amount : float = 25.0
 
 @export_group("Traffic")
-@export var traffic_density : float = 60.0 / 5000.0
+@export var traffic_density : float = 110.0 / 5000.0
 @export var traffic_speed_min : float = 10.0
 @export var traffic_speed_max : float = 20.0
 
@@ -360,7 +360,7 @@ func _update_traffic(delta : float) -> void:
 		var lane_x : float = car["lane_x"]
 		var basis := xf.basis
 		
-		if car["oncoming"]:
+		if not car["oncoming"]:
 			basis = basis.rotated(basis.y, PI)
 		
 		car.node.global_transform = Transform3D(basis, xf.origin + xf.basis * Vector3(lane_x, 0, 0))

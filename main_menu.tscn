@@ -9,9 +9,14 @@
 [ext_resource type="AudioStream" uid="uid://cm1v8ie6vhsgu" path="res://Sounds/SFX/UI/Hover/ui hover 3.wav" id="5_dy7ct"]
 [ext_resource type="AudioStream" uid="uid://cju327xpkqium" path="res://Sounds/SFX/UI/Hover/ui hover 4.wav" id="6_0o4t1"]
 [ext_resource type="AudioStream" uid="uid://bd8xsl8yulhyr" path="res://Sounds/SFX/UI/Hover/ui hover 5.wav" id="7_0k4wn"]
+[ext_resource type="FontFile" uid="uid://gyrgq1w5obua" path="res://Art/Fonts/Zen_Dots/ZenDots-Regular.ttf" id="10_0o4t1"]
+[ext_resource type="FontFile" uid="uid://b1ojdh50j7xyb" path="res://Art/Fonts/Turret_Road/TurretRoad-Bold.ttf" id="11_0k4wn"]
+[ext_resource type="Texture2D" uid="uid://ckilkpcjkn5ej" path="res://Art/bg.png" id="12_j5v2v"]
 
 [sub_resource type="LabelSettings" id="LabelSettings_rhts7"]
+font = ExtResource("10_0o4t1")
 font_size = 95
+font_color = Color(0.99607843, 0.7372549, 0.06666667, 1)
 
 [node name="Control" type="Control" unique_id=1264898284]
 layout_mode = 3
@@ -26,7 +31,14 @@ normal_click = ExtResource("3_8qtwp")
 play_click = ExtResource("4_dy7ct")
 hover_sfx = Array[AudioStream]([ExtResource("3_qe12f"), ExtResource("4_8qtwp"), ExtResource("5_dy7ct"), ExtResource("6_0o4t1"), ExtResource("7_0k4wn")])
 
+[node name="TextureRect" type="TextureRect" parent="." unique_id=973757219]
+layout_mode = 0
+offset_right = 1920.0
+offset_bottom = 1080.0
+texture = ExtResource("12_j5v2v")
+
 [node name="Background" type="ColorRect" parent="." unique_id=1589021384]
+visible = false
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -52,22 +64,27 @@ theme_override_constants/separation = 30
 
 [node name="TitleLabel" type="Label" parent="MenuBox" unique_id=1105834360]
 layout_mode = 2
-text = "Accelerate
+text = "Urban Coastal 
+Street Biking
 "
 label_settings = SubResource("LabelSettings_rhts7")
+horizontal_alignment = 1
 
 [node name="PlayButton" type="Button" parent="MenuBox" unique_id=790549152]
 custom_minimum_size = Vector2(300, 70)
 layout_mode = 2
+theme_override_fonts/font = ExtResource("11_0k4wn")
 text = "PLAY"
 
 [node name="LeaderboardButton" type="Button" parent="MenuBox" unique_id=826662051]
 custom_minimum_size = Vector2(300, 70)
 layout_mode = 2
+theme_override_fonts/font = ExtResource("11_0k4wn")
 text = "BEST TIMES"
 
 [node name="LeaderboardPanel" type="PanelContainer" parent="." unique_id=263463596]
 visible = false
+custom_minimum_size = Vector2(200, 100)
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -86,11 +103,16 @@ layout_mode = 2
 
 [node name="Best Times" type="Label" parent="LeaderboardPanel/VBoxContainer" unique_id=1472064]
 layout_mode = 2
+theme_override_fonts/font = ExtResource("11_0k4wn")
 text = "BEST TIMES"
 horizontal_alignment = 1
 
 [node name="ScoresLabel" type="Label" parent="LeaderboardPanel/VBoxContainer" unique_id=1946572032]
 layout_mode = 2
+theme_override_fonts/font = ExtResource("11_0k4wn")
+horizontal_alignment = 1
 
 [node name="BackButton" type="Button" parent="LeaderboardPanel/VBoxContainer" unique_id=832790208]
 layout_mode = 2
+theme_override_fonts/font = ExtResource("11_0k4wn")
+text = "Back"

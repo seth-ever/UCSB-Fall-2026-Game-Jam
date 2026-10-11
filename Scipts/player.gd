@@ -3,7 +3,7 @@ extends Node3D
 signal finished
 
 @export var crash_sfx : Array[AudioStream]
-@export var boost_sfx : Array[AudioStream]
+@export var boost_sfx : AudioStream
 
 
 @export_group("Visual Effect")
@@ -116,7 +116,7 @@ func _physics_process(delta: float) -> void:
 	global_transform = Transform3D(xf.basis, 
 	xf.origin + xf.basis * Vector3(lateral_position, 0.0, 0.0))
 	
-	var target_lean : float = -steering * deg_to_rad(lean_max_degrees)
+	var target_lean : float = -steering * deg_to_rad(lean_max_degrees) * (speed / max_absolute_speed)
 	_current_lean = lerpf(_current_lean, target_lean, lean_speed * delta)
 	camera.rotation.z = _current_lean
 	
@@ -127,7 +127,7 @@ func _physics_process(delta: float) -> void:
 
 func apply_boost(amount : float) -> void:
 	boost_target = maxf(boost_target, amount)
-	AudioManager.play_sfx_random(boost_sfx)
+	AudioManager.play_sfx(boost_sfx, randf_range(0.95, 1.05))
 	
 func crash() -> void:
 	if _iframes_remaining > 0.0:
