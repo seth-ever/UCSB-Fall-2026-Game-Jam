@@ -10,7 +10,15 @@
 [ext_resource type="Sky" uid="uid://v37n6w8ncwg8" path="res://Art/HDRIs/EveningSkyHDRI011A_4K/EveningSkyHDRI011A_4K.tres" id="5_d0n2m"]
 [ext_resource type="Material" uid="uid://d32hchusnjtg5" path="res://Art/Shaders/vaporwave_shader.tres" id="6_rr734"]
 [ext_resource type="Script" uid="uid://dk85mt2rwxkg6" path="res://Scipts/race_ui.gd" id="8_bgqgp"]
+[ext_resource type="AudioStream" uid="uid://cxlmkam5jge0a" path="res://Sounds/SFX/Crash/crash1.wav" id="9_hpjwn"]
+[ext_resource type="AudioStream" uid="uid://dr0yg12srmoxo" path="res://Sounds/SFX/Crash/crash2.wav" id="10_mga0u"]
 [ext_resource type="AudioStream" uid="uid://bpqpwuewnrpxb" path="res://Sounds/Music/music loop fixed.wav" id="11_2ff4t"]
+[ext_resource type="AudioStream" uid="uid://cylahlrkfu6lu" path="res://Sounds/SFX/Crash/crash3.wav" id="11_4pb3y"]
+[ext_resource type="AudioStream" uid="uid://cy85kpkktykji" path="res://Sounds/SFX/Crash/crash4.wav" id="12_8yow8"]
+[ext_resource type="AudioStream" uid="uid://dlmxqmht1v6pb" path="res://Sounds/SFX/Boosts/boost 2.wav" id="13_1tyb2"]
+[ext_resource type="AudioStream" uid="uid://cqq5mrsk7yeb4" path="res://Sounds/SFX/Boosts/boost 3.wav" id="14_wk4yq"]
+[ext_resource type="AudioStream" uid="uid://bim2lgya331xx" path="res://Sounds/SFX/Boosts/boost.wav" id="15_fxx8m"]
+[ext_resource type="AudioStream" uid="uid://6mfkaebtdjwu" path="res://Sounds/SFX/countdown woop 2.wav" id="19_mga0u"]
 
 [sub_resource type="Environment" id="Environment_b8hyw"]
 background_mode = 2
@@ -37,6 +45,7 @@ font_size = 50
 [node name="Highway" type="Node3D" unique_id=159052111]
 script = ExtResource("1_htopo")
 road_length = 5000.0
+race_music = ExtResource("11_2ff4t")
 road_material = ExtResource("2_pu04k")
 wall_material = ExtResource("3_cmgr2")
 boost_scene = ExtResource("4_v7vmg")
@@ -45,6 +54,8 @@ lines_material = ExtResource("4_53wp0")
 lines_tile_length = 60.0
 
 [node name="Player" parent="." unique_id=798075125 instance=ExtResource("2_mdx7g")]
+crash_sfx = Array[AudioStream]([ExtResource("9_hpjwn"), ExtResource("10_mga0u"), ExtResource("11_4pb3y"), ExtResource("12_8yow8")])
+boost_sfx = Array[AudioStream]([ExtResource("13_1tyb2"), ExtResource("14_wk4yq"), ExtResource("15_fxx8m")])
 aberration_material = ExtResource("6_rr734")
 max_aberration = 0.02
 
@@ -60,6 +71,7 @@ mesh = SubResource("QuadMesh_lkdlq")
 [node name="RaceUI" type="CanvasLayer" parent="." unique_id=666856725]
 script = ExtResource("8_bgqgp")
 race_music = ExtResource("11_2ff4t")
+beep_sfx = ExtResource("19_mga0u")
 
 [node name="StartCountDownLabel" type="Label" parent="RaceUI" unique_id=1107869657]
 anchors_preset = 15
@@ -104,6 +116,7 @@ text = "Nice Time! Enter your initials"
 
 [node name="NameEdit" type="LineEdit" parent="RaceUI/NameEntryPanel/VBoxContainer" unique_id=1196049998]
 layout_mode = 2
+alignment = 1
 
 [node name="SubmitButton" type="Button" parent="RaceUI/NameEntryPanel/VBoxContainer" unique_id=1811041365]
 layout_mode = 2

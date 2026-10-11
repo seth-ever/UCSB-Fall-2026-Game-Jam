@@ -10,6 +10,7 @@ extends Node3D
 
 @export var generation_seed : int = -1
 
+@export var race_music: AudioStream
 
 @export_group("Scenery")
 @export var ocean_y : float = -45.0
@@ -66,8 +67,6 @@ func _ready() -> void:
 	player.finished.connect(race_ui.finish_race)
 	race_ui.race_finished.connect(on_race_finished)
 
-	
-	
 	total_length = road_length + runoff_length
 	
 	_init_materials()
@@ -81,6 +80,8 @@ func _ready() -> void:
 	_spawn_traffic()
 	
 	player.setup(curve, road_length)
+	
+	#AudioManager.switch_music_synced(race_music)
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.

@@ -2,6 +2,10 @@ extends Node3D
 
 signal finished
 
+@export var crash_sfx : Array[AudioStream]
+@export var boost_sfx : Array[AudioStream]
+
+
 @export_group("Visual Effect")
 @export var aberration_material: ShaderMaterial
 @export var max_aberration : float = 0.03
@@ -123,6 +127,7 @@ func _physics_process(delta: float) -> void:
 
 func apply_boost(amount : float) -> void:
 	boost_target = maxf(boost_target, amount)
+	AudioManager.play_sfx_random(boost_sfx)
 	
 func crash() -> void:
 	if _iframes_remaining > 0.0:
@@ -131,3 +136,4 @@ func crash() -> void:
 	boost_bonus = 0
 	boost_target = 0
 	_iframes_remaining = crash_iframes
+	AudioManager.play_sfx_random(crash_sfx)

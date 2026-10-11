@@ -22,6 +22,7 @@ var final_time   : float = 0.0
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	timer_label.text = format_time(0.0)
+	
 	start_countdown()
 	
 	name_edit.max_length = 3
@@ -38,12 +39,13 @@ func _process(delta: float) -> void:
 
 
 func start_countdown() -> void:
+	AudioManager.play_sfx(beep_sfx)
 	for n in [3, 2, 1]:
 		countdown_label.text = str(n)
 		#Add play for countdown sfx
 		await get_tree().create_timer(1.0).timeout
 	countdown_label.text = "ACCELERATE!"
-	AudioManager.play_music(race_music)
+	AudioManager.switch_music_synced(race_music)
 	race_running = true
 	race_started.emit()
 	await get_tree().create_timer(0.8).timeout
