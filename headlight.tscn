@@ -1,0 +1,21 @@
+[gd_scene format=3 uid="uid://dd8o2dolnsncv"]
+
+[ext_resource type="Script" uid="uid://bub08k5dfy1op" path="res://Scipts/headlight.gd" id="1_ypivv"]
+
+[node name="Headlight" type="Node3D" unique_id=1782270962]
+script = ExtResource("1_ypivv")
+
+[node name="lightcone" type="Node3D" parent="." unique_id=410154129]
+
+[node name="YellowLight" type="SpotLight3D" parent="lightcone" unique_id=1293386849]
+light_color = Color(0.96862745, 0.88235295, 0.5254902, 1)
+light_energy = 3.0
+spot_range = 50.0
+spot_attenuation = 2.0
+spot_angle = 35.0
+
+[node name="WhiteLight" type="SpotLight3D" parent="lightcone" unique_id=1252745605]
+light_energy = 2.0
+spot_range = 50.0
+spot_attenuation = 2.0
+spot_angle = 25.0

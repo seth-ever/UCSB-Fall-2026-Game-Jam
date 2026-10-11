@@ -10,8 +10,6 @@ extends Node3D
 
 @export var generation_seed : int = -1
 
-@export var race_music: AudioStream
-
 @export_group("Scenery")
 @export var ocean_y : float = -45.0
 @export var building_density : float = 12.0 / 500.0 
@@ -46,6 +44,10 @@ extends Node3D
 @export_group("Tunnel")
 @export var tunnel_length : float = 1000.0
 
+@export_group("Audio")
+@export var main_song : AudioStream
+@export var tunnel_song : AudioStream
+
 var curve: Curve3D
 var road_path: Path3D = null
 
@@ -56,6 +58,9 @@ var total_length: float = 0.0
 
 var _boosts : Array = []
 var _traffic : Array = []
+
+var tunnel_start : float = 0.0
+var tunnel_end : float = 0.0
 
 @onready var race_ui = $RaceUI
 @onready var player: Node3D = $Player
@@ -87,7 +92,9 @@ func _ready() -> void:
 	
 	player.setup(curve, road_length)
 	
-	#AudioManager.switch_music_synced(race_music)
+	$SkyController.track_player(player, road_length, tunnel_start, tunnel_end)
+	$SkyController.tunnel_entered.connect(_on_tunnel_entered)
+	$SkyController.night_started.connect(_on_night_started)
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -95,8 +102,9 @@ func _physics_process(delta: float) -> void:
 	_update_traffic(delta)
 	_check_boosts()
 	_check_traffic()
-
-
+	
+	if Input.is_action_just_pressed("pause"):
+		race_ui.show_pause()
 
 func _init_materials() -> void:
 	if road_material == null:
@@ -298,8 +306,8 @@ func _build_road_lines() -> void:
 
 func _build_tunnel() -> void:
 	var half := lane_width * 2.0
-	var tunnel_start : float = road_length * 0.5 - tunnel_length * 0.5
-	var tunnel_end   : float = tunnel_start + tunnel_length
+	tunnel_start = road_length * 0.5 - tunnel_length * 0.5
+	tunnel_end   = tunnel_start + tunnel_length
 	
 	var sub  := Curve3D.new()
 	var step := 6.0
@@ -443,3 +451,11 @@ func _check_traffic() -> void:
 			continue
 		if absf(car["s"] - player_s) < front_back_gap:
 			player.crash()
+			
+			
+func _on_night_started() -> void:
+	AudioManager.switch_music_synced(main_song)
+
+func _on_tunnel_entered() -> void:
+	player.set_headlights_on(true)
+	AudioManager.switch_music_synced(tunnel_song)

@@ -59,7 +59,7 @@ var _iframes_remaining : float = 0.0
 var _current_aberration : float = 0.0
 
 @onready var camera: Camera3D = $Camera3D
-
+@onready var _headlight: Node = $Headlight
 
 func setup(curve: Curve3D, road_length: float) -> void:
 	_curve = curve
@@ -80,6 +80,11 @@ func apply_aberration(delta: float) -> void:
 	aberration_material.set_shader_parameter("aberration_amount", _current_aberration)
 	
 	
+func set_headlights_on(on: bool) -> void:
+	if on:
+		_headlight.turn_on()
+	else:
+		_headlight.turn_off()
 
 func _physics_process(delta: float) -> void:
 

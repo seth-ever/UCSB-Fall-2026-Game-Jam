@@ -19,9 +19,15 @@ signal race_finished(final_time : float)
 @onready var default_panel: PanelContainer = $DefaultPanel
 @onready var return_button: Button = $DefaultPanel/VBoxContainer/ReturnButton
 
+@onready var pause_panel: PanelContainer = $PausePanel
+@onready var resume_button : Button = $PausePanel/VBoxContainer/ResumeButton
+@onready var p_return_button: Button = $PausePanel/VBoxContainer/ReturnButton
+
 var race_running : bool = false
 var time_elapsed : float = 0.0
 var final_time   : float = 0.0
+
+var paused : bool = false
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
@@ -35,6 +41,8 @@ func _ready() -> void:
 	name_edit.text_submitted.connect(func(_t): on_submit())
 	
 	return_button.pressed.connect(return_to_menu)
+	p_return_button.pressed.connect(return_to_menu)
+	resume_button.pressed.connect(show_pause)
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -94,4 +102,19 @@ func show_return() -> void:
 	
 func return_to_menu() -> void:
 	default_panel.hide()
+	pause_panel.hide()
+	Engine.time_scale = 1
 	get_tree().change_scene_to_file("res://main_menu.tscn")
+
+func show_pause() -> void:
+	if paused:
+		pause_panel.hide()
+		Engine.time_scale = 1
+	else:
+		pause_panel.show()
+		Engine.time_scale = 0
+		
+	
+	paused = !paused
+		
+		

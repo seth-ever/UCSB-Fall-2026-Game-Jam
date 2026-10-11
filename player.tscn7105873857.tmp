@@ -1,0 +1,13 @@
+[gd_scene format=3 uid="uid://cgp8g306w4cje"]
+
+[ext_resource type="Script" uid="uid://csr4a3qci12nc" path="res://Scipts/player.gd" id="1_4flbx"]
+[ext_resource type="PackedScene" uid="uid://dd8o2dolnsncv" path="res://headlight.tscn" id="2_onrkg"]
+
+[node name="Player" type="Node3D" unique_id=798075125]
+script = ExtResource("1_4flbx")
+lateral_movement_speed = 12.0
+
+[node name="Camera3D" type="Camera3D" parent="." unique_id=2090396786]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.3, 0)
+
+[node name="Headlight" parent="." unique_id=1782270962 instance=ExtResource("2_onrkg")]

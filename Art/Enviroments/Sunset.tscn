@@ -1,0 +1,6 @@
+[gd_scene format=3 uid="uid://e33bv238uiru"]
+
+[sub_resource type="Environment" id="Environment_cwlrg"]
+
+[node name="Sunset" type="WorldEnvironment" unique_id=825873503]
+environment = SubResource("Environment_cwlrg")
