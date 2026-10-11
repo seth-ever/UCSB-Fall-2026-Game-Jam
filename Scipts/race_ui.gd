@@ -15,6 +15,9 @@ signal race_finished(final_time : float)
 @onready var name_edit: LineEdit = $NameEntryPanel/VBoxContainer/NameEdit
 @onready var submit_button: Button = $NameEntryPanel/VBoxContainer/SubmitButton
 
+@onready var default_panel: PanelContainer = $DefaultPanel
+@onready var return_button: Button = $DefaultPanel/VBoxContainer/ReturnButton
+
 var race_running : bool = false
 var time_elapsed : float = 0.0
 var final_time   : float = 0.0
@@ -29,6 +32,8 @@ func _ready() -> void:
 	name_edit.text_changed.connect(on_name_change)
 	submit_button.pressed.connect(on_submit)
 	name_edit.text_submitted.connect(func(_t): on_submit())
+	
+	return_button.pressed.connect(return_to_menu)
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -80,3 +85,11 @@ func format_time(t : float) -> String:
 	var seconds : int = int(t) % 60
 	var millis  : int = int((t - int(t)) * 1000.0)
 	return "%02d:%02d.%02d" % [minutes, seconds, millis / 10]
+
+func show_return() -> void:
+	default_panel.show()
+	return_button.grab_focus()
+	
+func return_to_menu() -> void:
+	default_panel.hide()
+	get_tree().change_scene_to_file("res://main_menu.tscn")

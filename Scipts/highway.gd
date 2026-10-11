@@ -291,7 +291,7 @@ func on_race_finished(final_time : float) -> void:
 	if Leaderboard.qualifies(time_ms):
 		race_ui.show_name_entry(time_ms)
 	else:
-		pass
+		race_ui.show_return()
 
 func _spawn_boosts() -> void:
 	var boost_count = boost_density * (road_length - 80.0)
