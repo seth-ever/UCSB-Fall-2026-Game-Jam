@@ -22,6 +22,7 @@ extends Node3D
 @export var ocean_material: StandardMaterial3D
 @export var cliff_material: StandardMaterial3D
 @export var building_material: StandardMaterial3D
+@export var tunnel_material: StandardMaterial3D
 
 @export_group("Assets")
 @export var boost_scene : PackedScene
@@ -41,6 +42,9 @@ extends Node3D
 @export var traffic_density : float = 110.0 / 5000.0
 @export var traffic_speed_min : float = 10.0
 @export var traffic_speed_max : float = 20.0
+
+@export_group("Tunnel")
+@export var tunnel_length : float = 1000.0
 
 var curve: Curve3D
 var road_path: Path3D = null
@@ -75,6 +79,8 @@ func _ready() -> void:
 	_build_road_lines()
 	_build_ocean()
 	_build_city()
+	_build_tunnel()
+	
 	
 	_spawn_boosts()
 	_spawn_traffic()
@@ -111,6 +117,9 @@ func _init_materials() -> void:
 	if building_material == null:
 		building_material  = StandardMaterial3D.new()
 		building_material.albedo_color = Color(0.22, 0.2, 0.25)
+	if tunnel_material == null:
+		tunnel_material = StandardMaterial3D.new()
+		tunnel_material.albedo_color = Color(0.3, 0.3, 0.3)
 	
 	
 
@@ -243,6 +252,7 @@ func _build_city() -> void:
 		meshInstance.visibility_range_end_margin = 50.0
 		meshInstance.visibility_range_fade_mode = GeometryInstance3D.VISIBILITY_RANGE_FADE_SELF
 		
+		
 func _build_road_lines() -> void:
 	if lines_material == null:
 		return
@@ -285,6 +295,58 @@ func _build_road_lines() -> void:
 	meshInstance.material_override= lines_material
 	meshInstance.extra_cull_margin = 16384.0
 	add_child(meshInstance)
+
+func _build_tunnel() -> void:
+	var half := lane_width * 2.0
+	var tunnel_start : float = road_length * 0.5 - tunnel_length * 0.5
+	var tunnel_end   : float = tunnel_start + tunnel_length
+	
+	var sub  := Curve3D.new()
+	var step := 6.0
+	var s    := tunnel_start
+	
+	while s <= tunnel_end:
+		sub.add_point(curve.sample_baked(s, true))
+		s += step
+	
+	#Smoothing
+	for i in range(1, sub.point_count - 1):
+		var prev := sub.get_point_position(i - 1)
+		var next := sub.get_point_position(i + 1)
+		var dir := (next - prev).normalized()
+		sub.set_point_in(i, -dir * step * 0.3)
+		sub.set_point_out(i, dir * step * 0.3)
+		
+	var path := Path3D.new()
+	path.curve = sub
+	add_child(path)
+	
+	var poly := CSGPolygon3D.new()
+	add_child(poly)
+	poly.mode = CSGPolygon3D.MODE_PATH
+	poly.path_node = poly.get_path_to(path)
+	poly.path_interval_type = CSGPolygon3D.PATH_INTERVAL_DISTANCE
+	poly.path_interval = 4.0
+	poly.path_rotation = CSGPolygon3D.PATH_ROTATION_PATH_FOLLOW
+	poly.smooth_faces = false
+	poly.use_collision = false
+	poly.material = tunnel_material
+	
+	#Tunnel Shape
+	var inner := half + 1.2
+	var outer := inner + 0.6
+	var ceil_y := 6.1
+	var ceil_top := ceil_y + 0.6
+	poly.polygon = PackedVector2Array([
+		Vector2(-outer, 0.0),
+		Vector2(-outer, ceil_top),
+		Vector2(outer, ceil_top),
+		Vector2(outer, 0.0),
+		Vector2(inner, 0.0),
+		Vector2(inner, ceil_y),
+		Vector2(-inner, ceil_y),
+		Vector2(-inner, 0.0),
+	])
 
 func on_race_finished(final_time : float) -> void:
 	var time_ms := roundi(final_time * 1000.0)

@@ -57,6 +57,7 @@ road_length = 5000.0
 race_music = ExtResource("11_2ff4t")
 road_material = ExtResource("2_pu04k")
 wall_material = ExtResource("3_cmgr2")
+tunnel_material = ExtResource("3_cmgr2")
 boost_scene = ExtResource("4_v7vmg")
 car_scene = ExtResource("5_2ff4t")
 lines_material = ExtResource("4_53wp0")
